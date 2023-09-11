@@ -7,7 +7,8 @@ console.log(numero); //Tipo numerico
 var objeto = {
     nombre : 'Ariel',
     apellido : 'Betancud',
-    telefono : '261456879' 
+    telefono : '261456879',
+    clase : 'Programación' 
 }
 
 console.log(objeto);

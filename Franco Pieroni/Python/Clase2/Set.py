@@ -105,6 +105,9 @@ seleccionArgentina[7] =  {
 seleccionArgentina[8] =  {
     22: {'Nombre' : 'Lautaro Martinez', 'Edad' : 26, 'Altura' : 1.74, 'Precio' : '85 Millones', 'Posicion' : 'Centrodelantero'}
 }
+seleccionArgentina[9] =  {
+    9: {'Nombre' : 'Julian Albarez', 'Edad' : 23, 'Altura' : 1.70, 'Precio' : '60 Millones', 'Posicion' : 'Centrodelantero'}
+}
 
 print(seleccionArgentina)
 print('Tenemos cargados en el diccionario la cantidad de jugadores: ', end=' ')
