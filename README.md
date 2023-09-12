@@ -1,6 +1,6 @@
 
 ## Concatenados
-Nuestro repositorio grupal 
+Nuestro repositorio grupal, cada integrante creó su propia rama para ir cargando lo trabajado en clase  
 
 
 
