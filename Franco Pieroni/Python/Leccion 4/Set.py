@@ -83,7 +83,7 @@ print(diccionario2)
 seleccionArgentina: dict[int | Any, dict[str, str | float | int] | dict[str, str | float | int] | dict[str, str | float | int] | dict[str, str | float | int] | dict[str, str | float | int] | Any] = {
     10: {'Nombre' : 'Lionel Messi', 'Edad' : 35, 'Altura' : 1.70, 'Precio' : '50 Millones', 'Posicion' : 'Toda la cancha'},
     11: {'Nombre' : 'Ángel Di María', 'Edad' : 34, 'Altura' : 1.80, 'Precio' : '12 Millones', 'Posicion' : 'Extremo Izquierdo'},
-    24: {'Nombre' : 'Paulo Dybala', 'Edad' : 28, 'Altura' : 1.77, 'Precio' : '35 Millones', 'Posicion' : 'Mediapunta'},
+    21: {'Nombre' : 'Paulo Dybala', 'Edad' : 28, 'Altura' : 1.77, 'Precio' : '35 Millones', 'Posicion' : 'Mediapunta'},
     1:  {'Nombre' : 'Emiliano Martinez', 'Edad' : 30, 'Altura' : 1.88, 'Precio' : '10 Millones', 'Posicion' : 'Arquero'},
     20: {'Nombre' : 'Alexis Mac Allister', 'Edad' : 24, 'Altura' : 1.76, 'Precio' : '70 Millones', 'Posicion' : 'Mediocmapista Ofensivo'}
 }
@@ -143,7 +143,9 @@ print(cola)
 seRetira = cola.pop(0)
 print(cola)
 
-
+# Seguimos mostrando como recorrer un diccionario con el ciclo for
+for i in seleccionArgentina:
+    print(f'{i} -> {seleccionArgentina[i]}')
 
 
 
