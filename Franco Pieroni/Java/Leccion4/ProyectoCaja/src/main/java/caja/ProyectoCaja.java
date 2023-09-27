@@ -20,7 +20,7 @@ public class ProyectoCaja {
         System.out.println("Resultado volumen caja 1: " + resultado);
         
         Caja caja2 = new Caja(2, 4, 6); // Llamamos al constructor 2 con nuevos argumentos 
-        // Llamamos con el nuevo objeto al método para un nuevo calculo 
+        // Llamamos con el nuevo objeto al método para un nuevo cálculo 
         System.out.println("Resultado volumen caja 2: " + caja2.calcularVolumen());
     }
     
