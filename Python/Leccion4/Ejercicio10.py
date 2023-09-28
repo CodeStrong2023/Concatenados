@@ -8,16 +8,3 @@ for i in cadena:
         lista.append(i) # Lo agregamos a la lista
 print(f'\nLista de caracteres sin repetir ninguno: \n{lista}')
 
-
-lista = []
-for i in cadena:
-    if i not in lista: # Si el caracter aun no esta en la lista
-        lista.append(i) # Lo agregamos a la lista
-print(f'\nLista de caracteres sin repetir ninguno: \n{lista}')
-
-lista = []
-for i in cadena:
-    if i not in lista: # Si el caracter aun no esta en la lista
-        lista.append(i) # Lo agregamos a la lista
-print(f'\nLista de caracteres sin repetir ninguno: \n{lista}')
-
