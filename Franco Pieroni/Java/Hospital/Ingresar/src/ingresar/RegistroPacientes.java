@@ -11,19 +11,26 @@ import javax.swing.table.DefaultTableModel;
 public class RegistroPacientes extends javax.swing.JFrame {
 
     // Creamos una nueva tabla llamada (modelo)
-    DefaultTableModel modelo = new DefaultTableModel();
-    
+    DefaultTableModel modelo = new DefaultTableModel(){
+        
+        @Override public boolean isCellEditable(int row, int column) { 
+        
+            return false;
+        
+        }
+
+ 
+    };
+
     // Creamos un arreglo de pacientes
     ArrayList<Paciente> listaPacientes = new ArrayList<Paciente>();
-    
-    public int contadorPacientes = 0;
 
     // Aquí se formateara el formulario y la tabla
     public RegistroPacientes() {
         initComponents();
         this.setTitle("REGISTRO PACIENTES");
         this.setSize(800, 600);
-        this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);      
         modelo.addColumn("ID");
         modelo.addColumn("NOMBRE");
         modelo.addColumn("APELLIDO");
@@ -32,9 +39,11 @@ public class RegistroPacientes extends javax.swing.JFrame {
         modelo.addColumn("TIPO SANGUÍNEO");
         modelo.addColumn("ESPECIALIDAD");
         // Usamos esté método para que la tabla se actualice
+        limpiarCampos();
         refrescarTabla();
 
     }
+
     // Este método permite actualizar la tabla
     public void refrescarTabla() {
 
@@ -58,16 +67,25 @@ public class RegistroPacientes extends javax.swing.JFrame {
         }
         // Se agrega el modelo a la tabla (datosPacientes)
         datosPacientes.setModel(modelo);
+        limpiarCampos();
 
     }
-   
     
-    
+    public void limpiarCampos(){
+        nombre.setText(null);
+        apellido.setText(null);
+        dni.setText(null);
+        fechaNacimiento.setText(null);
+        tipoSangre.setSelectedIndex(0);
+        especialidad.setSelectedIndex(0);
+        
+    }
+
     // Este método nos permite verificar que el nombre y apellido ingresados sean válidos
-    public boolean validarNombre(){
+    public boolean validarNombre() {
         // Usamos expresiones regulares para esto
         // Si los String ingresados (nombre) o (apellido) tienen algún caracter que no sea una letra
-        if (!nombre.getText().matches("[A-Za-z]*") || !apellido.getText().matches("[A-Za-z]*")){
+        if (!nombre.getText().matches("[A-Za-z]*") || !apellido.getText().matches("[A-Za-z]*")) {
             // retorna false
             return false;
         } else {
@@ -118,11 +136,12 @@ public class RegistroPacientes extends javax.swing.JFrame {
         }
 
     }
+
     // Este método verifica que la fecha ingresada por el usuario sea válida
     public boolean validarFecha() {
         // Para ello se utilizan expresiones regulares
         String fecha = fechaNacimiento.getText();
-        // Se estabelce un patrón usando la clase Pattern
+        // Se estabelce un patrón usando la clase Pattern  
         Pattern pattern = Pattern.compile("^(?:3[01]|[12][0-9]|0?[1-9])([\\-/.])(0?[1-9]|1[1-2])\\1\\d{4}$");
         // Con la clase Matcher comprobamos si la fecha ingresada encajacon el patrón 
         Matcher matcher = pattern.matcher(fecha);
@@ -134,18 +153,58 @@ public class RegistroPacientes extends javax.swing.JFrame {
         }
 
     }
+
     // Este método permite verificar que no hayan pacientes repetidos en la lista de pacientes 
     public boolean validarPaciente() {
         int coincidencias = 0;
         // Itera por el ArrayList de Pacientes listaPacientes
-        for (Paciente paciente : listaPacientes){
+        for (Paciente paciente : listaPacientes) {
             // Si el dni ingresado es igual al de algun paciente ya registrado
-            if (dni.getText().equals(paciente.getDni().toString())){
+            if (dni.getText().equals(paciente.getDni().toString())) {
                 coincidencias++;
             }
         }
         // Se retorna true
-        if (coincidencias > 0){
+        if (coincidencias > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    // Este método permite verificar que el dni a buscar sea válido
+    public boolean validarBusqueda(String dniBusqueda) {
+        int valido = 0;
+        String numero = "";
+        String[] unoNueve = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+        boolean validLength = true;
+        boolean esNumero = false;
+
+        // Se comprobará que el DNI ingresado tengo un largo válido
+        if (dniBusqueda.length() > 8 || dniBusqueda.length() < 7) {
+
+            validLength = false;
+
+        }
+
+        // Y que el String esté compuesto  solo de dígitos
+        for (int i = 0; i < dniBusqueda.length(); i++) {
+            numero = dniBusqueda.substring(i, i + 1);
+
+            for (int j = 0; j < unoNueve.length; j++) {
+                if (numero.equals(unoNueve[j])) {
+                    valido++;
+                }
+            }
+        }
+
+        if (valido == dniBusqueda.length()) {
+
+            esNumero = true;
+
+        }
+
+        // Si se cumplen ambas condiciones retorna (true)
+        if (validLength == true && esNumero == true) {
             return true;
         } else {
             return false;
@@ -169,13 +228,13 @@ public class RegistroPacientes extends javax.swing.JFrame {
         tipoSangre = new javax.swing.JComboBox<>();
         especialidad = new javax.swing.JComboBox<>();
         fechaNacimiento = new javax.swing.JFormattedTextField();
-        btnEliminarAlumno = new javax.swing.JButton();
-        btnAgregarAlumo = new javax.swing.JButton();
+        btnEliminarPaciente = new javax.swing.JButton();
+        btnAgregarPaciente = new javax.swing.JButton();
         nombre = new javax.swing.JTextField();
         apellido = new javax.swing.JTextField();
         dni = new javax.swing.JTextField();
-        btBuscar = new javax.swing.JButton();
-        btModificar = new javax.swing.JButton();
+        btnBuscarPaciente = new javax.swing.JButton();
+        btnModificarPaciente = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -223,10 +282,10 @@ public class RegistroPacientes extends javax.swing.JFrame {
         jLabel6.setText("Especialidad requerida:");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 280, -1, -1));
 
-        tipoSangre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A+", "B+", "AB+", "0+", "A-", "B-", "AB-", "0-" }));
+        tipoSangre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "A+", "B+", "AB+", "0+", "A-", "B-", "AB-", "0-" }));
         getContentPane().add(tipoSangre, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 230, -1, -1));
 
-        especialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cardiología", "Odontología", "Traumatología", "Pediatria", "Clínica", "Radiología", "Dermatología", "Oftalmología" }));
+        especialidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione", "Cardiología", "Odontología", "Traumatología", "Pediatria", "Clínica", "Radiología", "Dermatología", "Oftalmología" }));
         getContentPane().add(especialidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 280, -1, -1));
 
         fechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
@@ -236,23 +295,23 @@ public class RegistroPacientes extends javax.swing.JFrame {
         });
         getContentPane().add(fechaNacimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, 150, -1));
 
-        btnEliminarAlumno.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnEliminarAlumno.setText("Eliminar");
-        btnEliminarAlumno.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminarPaciente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnEliminarPaciente.setText("Eliminar");
+        btnEliminarPaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarAlumnoActionPerformed(evt);
+                btnEliminarPacienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEliminarAlumno, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 190, 170, 100));
+        getContentPane().add(btnEliminarPaciente, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 190, 170, 100));
 
-        btnAgregarAlumo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAgregarAlumo.setText("Agregar");
-        btnAgregarAlumo.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarPaciente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregarPaciente.setText("Agregar");
+        btnAgregarPaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarAlumoActionPerformed(evt);
+                btnAgregarPacienteActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAgregarAlumo, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 50, 170, 100));
+        getContentPane().add(btnAgregarPaciente, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 50, 170, 100));
 
         nombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -263,50 +322,90 @@ public class RegistroPacientes extends javax.swing.JFrame {
         getContentPane().add(apellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 250, -1));
         getContentPane().add(dni, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 140, 250, -1));
 
-        btBuscar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btBuscar.setText("Buscar");
-        getContentPane().add(btBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 50, 170, 100));
+        btnBuscarPaciente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBuscarPaciente.setText("Buscar");
+        btnBuscarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarPacienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnBuscarPaciente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 50, 170, 100));
 
-        btModificar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btModificar.setText("Modificar");
-        getContentPane().add(btModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 190, 170, 100));
+        btnModificarPaciente.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnModificarPaciente.setText("Modificar");
+        btnModificarPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarPacienteActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnModificarPaciente, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 190, 170, 100));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Aquí estableceremos que pasará la usar el botón "Eliminar"
-    private void btnEliminarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarAlumnoActionPerformed
+    private void btnEliminarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPacienteActionPerformed
+        // Guardaremos la ubicación de la fila seleccionada
+        int fila = datosPacientes.getSelectedRow();
+        boolean coincidencia = false;
+        int index = 0;
         
-      
-      
-        
-        
-    }//GEN-LAST:event_btnEliminarAlumnoActionPerformed
+        // Si no hay ninguna fila seleccionada el método .getSelectedRow() devolvera -1
+        if (fila == -1) {
+            // Se solicitara al usuario que seleccione una fila
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+
+        } else {
+            // De lo contrario se guardará el id correspondiente a la fila
+            String id = modelo.getValueAt(fila, 0).toString();
+            // Iteramos por la lista de pacientes
+            for (Paciente paciente : listaPacientes) {
+                // Si el id del paciente coincide con el id de la fila seleccionada
+                if (paciente.getIdPaciente() == parseInt(id)) {
+                    // Hay coincidencia
+                    coincidencia = true;
+                    // Guardamos el indice del paciente en la listaPacientes
+                    index = listaPacientes.indexOf(paciente);
+
+                }
+
+            }
+            // Eliminamos el paciente de la lista
+            listaPacientes.remove(index);
+            // Y actualizamos la tabla
+            refrescarTabla();
+            // Se muestra un mensaje, el paciente fue eliminado exitosamente
+            JOptionPane.showMessageDialog(null, "Paciente eliminado exitosamente");
+
+        }
+
+
+    }//GEN-LAST:event_btnEliminarPacienteActionPerformed
     // Aquí estableceremos que pasará la usar el botón "Agregar"
-    private void btnAgregarAlumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAlumoActionPerformed
+    private void btnAgregarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPacienteActionPerformed
 
         // Primero nos aseguramos de que el usuario no deje ningun campo sin completar
-        if (nombre.getText().equals("") || apellido.getText().equals("") || dni.getText().equals("") || fechaNacimiento.getText().equals("")) {
+        if (nombre.getText().equals("") || apellido.getText().equals("") || dni.getText().equals("") || fechaNacimiento.getText().equals("") || tipoSangre.getSelectedIndex() == 0 || especialidad.getSelectedIndex() == 0 ) {
             // De lo contrario se le notifica que debe llenar todos los campos
             JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
-        // Luego se validara el nombre y apellido ingresado   
-        } else if (!validarNombre()){
+            // Luego se validara el nombre y apellido ingresado   
+        } else if (!validarNombre()) {
             // Si no son válidos se solicita que los vuelva a ingresar
             JOptionPane.showMessageDialog(null, "Debe ingresar un nombre y apellido válidos");
-        // Luego se compruba que el DNI ingresado sea válido 
+            // Luego se compruba que el DNI ingresado sea válido 
         } else if (!validarDni()) {
             // Si es inválido se notifica al usuario
             JOptionPane.showMessageDialog(null, "Debe ingresar un DNI válido");
-        // Se valida la fecha ingresada     
+            // Se valida la fecha ingresada     
         } else if (!validarFecha()) {
             // Si no es válida se solicita volver a ingresar en el formato correcto
             JOptionPane.showMessageDialog(null, "Debe ingresar una fecha válida, en el formato dd-mm-aaaa");
-        // Por último se verifica que el paciente no  se encuentra ya creado en listaPacientes 
+            // Por último se verifica que el paciente no  se encuentra ya creado en listaPacientes 
         } else if (validarPaciente()) {
-            
+
             JOptionPane.showMessageDialog(null, "El paciente ingresado ya existe");
-            
+
         } else {
-            
+
             // Se crea el nuevo paciente y se almacenan los datos ingresados en los atributos
             Paciente paciente = new Paciente();
             paciente.setIdPaciente(Paciente.contadorPaciente++);
@@ -322,25 +421,117 @@ public class RegistroPacientes extends javax.swing.JFrame {
             refrescarTabla();
 
         }
+    }//GEN-LAST:event_btnAgregarPacienteActionPerformed
 
-
-    }//GEN-LAST:event_btnAgregarAlumoActionPerformed
 
     private void nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_nombreActionPerformed
 
     private void fechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaNacimientoActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_fechaNacimientoActionPerformed
+    // Aquí estableceremos que pasará la usar el botón "Modificar"
+    private void btnModificarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarPacienteActionPerformed
+        // Guardaremos la ubicación de la fila seleccionada
+        int fila = datosPacientes.getSelectedRow();
+        int index;
+        
+        // Si alguno de los campos está vacio
+        if (nombre.getText().equals("") || apellido.getText().equals("") || dni.getText().equals("") || fechaNacimiento.getText().equals("")) {
+            // Se  notifica al usuario que debe llenar todos los campos
+            JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+            // Luego se validara el nombre y apellido ingresado   
+        } else if (!validarNombre()) {
+            // Si no son válidos se solicita que los vuelva a ingresar
+            JOptionPane.showMessageDialog(null, "Debe ingresar un nombre y apellido válidos");
+            // Luego se compruba que el DNI ingresado sea válido 
+        } else if (!validarDni()) {
+            // Si es inválido se notifica al usuario
+            JOptionPane.showMessageDialog(null, "Debe ingresar un DNI válido");
+            // Se valida la fecha ingresada     
+        } else if (!validarFecha()) {
+            // Si no es válida se solicita volver a ingresar en el formato correcto
+            JOptionPane.showMessageDialog(null, "Debe ingresar una fecha válida, en el formato dd-mm-aaaa");
+            
+        } else {
+            // Por último verificamos que haya un paciente seleccionado
+            if (fila == -1) {
+                // De lo contrario se solicita al usuario que seleccione una fila
+                JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+
+            } else {
+                // Iteramos por los pacientes de la lista
+                for (Paciente paciente : listaPacientes) {
+                    // Si encontramos un paciente cuyo DNI coincide con el DNI de la fila seleccionada
+                    if (paciente.getDni().equalsIgnoreCase(datosPacientes.getValueAt(fila, 3).toString())) {
+                        // Se actualizan todos los atributos del paciente con los datos ingresados
+                        paciente.setNombre(nombre.getText());
+                        paciente.setApellido(apellido.getText());
+                        paciente.setDni(dni.getText());
+                        paciente.setFechaNacimiento(fechaNacimiento.getText());
+                        paciente.setTipoSangre(tipoSangre.getSelectedItem().toString());
+                        paciente.setEspecialidad(especialidad.getSelectedItem().toString());
+                        // Se actualiza la tabla
+                        refrescarTabla();                       
+                        JOptionPane.showMessageDialog(null, "El paciente fue modificado exitosamente");
+
+                    }
+                }
+            }
+
+        }
+    }//GEN-LAST:event_btnModificarPacienteActionPerformed
+    // Aquí estableceremos que pasará la usar el botón "Buscar"
+    private void btnBuscarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPacienteActionPerformed
+        // Solicitamos al usuario que ingrese un DNI
+        boolean coincidencia = false;
+        String dniBusqueda = JOptionPane.showInputDialog("Ingrese un DNI: ");
+        
+        // Con este condicional manejamos que el usuario cancele la busqueda sin ingresar DNI
+        if (dniBusqueda != null) {
+            // Luego verificamos que el DNI ingresado sea válido
+            if (!validarBusqueda(dniBusqueda)) {
+                // De lo contrario se solicita ingredar un DNI válido
+                JOptionPane.showMessageDialog(null, "Debe ingresar un DNI válido");
+
+            } else {
+                // Iteramos por la lista de pacientes
+                for (Paciente paciente : listaPacientes) {
+                    // Si el DNI ingresado coincide con el de algun paciente registrado
+                    if (paciente.getDni().equalsIgnoreCase(dniBusqueda)) {
+                        // Iteramos por la tabla, buscnado una fila cuyo DNI coincida con el DNI del paciente buscado
+                        for (int i = 0; i < datosPacientes.getRowCount(); i++) {
+                            
+                            if (datosPacientes.getValueAt(i, 3).equals(dniBusqueda)) {
+                                // Si hay coincidencia, el paciente aparecerá seleccionado en la tabla
+                                datosPacientes.changeSelection(i, 0, false, false);
+                                JOptionPane.showMessageDialog(null, "Paciente encontrado");
+                                coincidencia = true;
+
+                            }
+                        }
+                    }
+                }
+                // Si no hay coincidencia, se notifica al usuario 
+                if (!coincidencia) {
+
+                    JOptionPane.showMessageDialog(null, "No se encontraron coincidencias");
+
+                }
+            }
+
+        }
+
+    }//GEN-LAST:event_btnBuscarPacienteActionPerformed
 
     // Se declaran las variables del formulario
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField apellido;
-    private javax.swing.JButton btBuscar;
-    private javax.swing.JButton btModificar;
-    private javax.swing.JButton btnAgregarAlumo;
-    private javax.swing.JButton btnEliminarAlumno;
+    private javax.swing.JButton btnAgregarPaciente;
+    private javax.swing.JButton btnBuscarPaciente;
+    private javax.swing.JButton btnEliminarPaciente;
+    private javax.swing.JButton btnModificarPaciente;
     private javax.swing.JTable datosPacientes;
     private javax.swing.JTextField dni;
     private javax.swing.JComboBox<String> especialidad;
@@ -359,6 +550,6 @@ public class RegistroPacientes extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void assertTrue(boolean find) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

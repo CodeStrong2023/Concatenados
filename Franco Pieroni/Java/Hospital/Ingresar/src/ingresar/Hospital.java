@@ -16,7 +16,7 @@ public class Hospital {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RegistroPacientes().setVisible(true);
+                new Login().setVisible(true);
             }
         });
         

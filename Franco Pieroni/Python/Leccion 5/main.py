@@ -73,4 +73,9 @@ def listarNombres(*nombres):
 listarNombres("Lucas", "Jose", "Claudia", "Rosa", "Maria")
 listarNombres("Marcos", "Daniel", "Romina", "Pepe", "Marcela", "Carlos")
 
+def listarTerminos(**terminos): # Lo mas utilizado es **kwargs para recibir argumentos
+    for llave, valor in terminos.items():
+        print(f'{llave} : {valor}')
 
+listarTerminos()
+listarTerminos(IDE = 'Integrated Develoment Enviroment', PK = 'Primary Key')
