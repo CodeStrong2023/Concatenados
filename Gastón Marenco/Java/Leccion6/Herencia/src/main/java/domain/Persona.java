@@ -5,10 +5,10 @@ package domain;
  * @author Gastón
  */
 public class Persona {
-    private String nombre;
-    private char genero;
-    private int edad;
-    private String direccion;
+    protected String nombre;
+    protected char genero;
+    protected int edad;
+    protected String direccion;
 
     //Constructor vacio: este es para crear objetos sin necesidad de inicializar
     //los atributos de la clase
