@@ -15,19 +15,26 @@ public class Empleado extends Persona{
     }
 
     public int getIdEmpleado() {
-        return idEmpleado;
-    }
-
-    public void setIdEmpleado(int idEmpleado) {
-        this.idEmpleado = idEmpleado;
+        return this.idEmpleado;
     }
 
     public double getSueldo() {
-        return sueldo;
+        return this.sueldo;
     }
 
     public void setSueldo(double sueldo) {
         this.sueldo = sueldo;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Empleado{");
+        sb.append("idEmpleado=").append(idEmpleado);
+        sb.append(", sueldo=").append(sueldo);
+        sb.append(", ").append(super.toString());
+        sb.append('}');
+        return sb.toString();
     }
     
     
